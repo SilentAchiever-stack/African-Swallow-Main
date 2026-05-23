@@ -8,7 +8,7 @@ const {
     updateOrderStatus,
     getOrderStats
 } =require('../controller/Ordercontroller')  // change Controller → controller;
-const { protect } = require('../MiddleWare/authMiddleware')   // change Middleware → MiddleWare;
+const { protect } = require('../MiddleWare/Authmiddleware');
 
 
 

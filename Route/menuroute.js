@@ -8,7 +8,7 @@ const {
     deleteMenuItem,
     seedMenu
 } = require('../controller/Menucontroller')  // change Controller → controller
-const { protect, superAdminOnly } = require('../MiddleWare/authMiddleware')  // change Middleware → MiddleWare
+const { protect, superAdminOnly } = require('../MiddleWare/Authmiddleware');
 
 
 

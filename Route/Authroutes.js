@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { login, seedAdmin, getMe } = require('../controller/Authcontroller');
-const { protect } = require('../Middleware/authMiddleware');
+const { protect } = require('../MiddleWare/Authmiddleware');
 
 // POST /api/auth/login
 router.post('/login', login);
