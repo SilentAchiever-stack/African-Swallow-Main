@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Africana Swallow — Admin</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --gold: #FFD700;
+            --gold-light: #FFE855;
+            --gold-dim: #C9A800;
+            --gold-muted: rgba(255, 215, 0, 0.08);
+            --gold-border: rgba(255, 215, 0, 0.2);
+            --black: #000000;
+            --black-soft: #0A0A0A;
+            --black-card: #111111;
+            --black-elevated: #181818;
+            --black-border: #242424;
+            --white: #FFFFFF;
+            --white-muted: rgba(255, 255, 255, 0.6);
+            --white-dim: rgba(255, 255, 255, 0.08);
+            --accent: #FF6B00;
+            --success: #00C853;
+            --danger: #FF3D3D;
+            --info: #00AEFF;
+            --warning: #FFB300;
+            --font-display: 'Playfair Display', Georgia, serif;
+            --font-body: 'Outfit', sans-serif;
+            --radius: 12px;
+            --radius-lg: 18px;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --shadow-gold: 0 0 40px rgba(255, 215, 0, 0.08);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--black-soft);
+            color: var(--white);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        body::-webkit-scrollbar-track {
+            background: var(--black);
+        }
+
+        body::-webkit-scrollbar-thumb {
+            background: var(--gold-dim);
+            border-radius: 2px;
+        }
+
+        /* ══════════════════════════════════════
+           LOGIN SCREEN
+        ══════════════════════════════════════ */
+        #loginScreen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--black);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated background grid */
+        #loginScreen::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255, 215, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 215, 0, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(60px);
+            }
+        }
+
+        /* Gold orb glow */
+        #loginScreen::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .login-card {
+            background: var(--black-card);
+            border: 1px solid var(--black-border);
+            border-radius: var(--radius-lg);
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            z-index: 1;
+            animation: fadeUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .login-logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gold-muted);
+            border: 1px solid var(--gold-border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            font-size: 1.1rem;
+        }
+
+        .login-logo h2 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .login-subtitle {
+            color: var(--white-muted);
+            font-size: 0.85rem;
+            margin-bottom: 32px;
+            padding-left: 56px;
+            letter-spacing: 0.3px;
+        }
+
+        .login-field {
+            position: relative;
+            margin-bottom: 14px;
+        }
+
+        .login-field i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--white-muted);
+            font-size: 0.85rem;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .login-field input {
+            width: 100%;
+            padding: 13px 14px 13px 40px;
+            background: var(--black-elevated);
+            border: 1px solid var(--black-border);
+            border-radius: var(--radius);
+            color: var(--white);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .login-field input::placeholder {
+            color: rgba(255, 255, 255, 0.25);
+        }
+
+        .login-field input:focus {
+            border-color: var(--gold-dim);
+            background: var(--black-card);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.06);
+        }
+
+        .login-field input:focus+i,
+        .login-field:focus-within i {
+            color: var(--gold-dim);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--gold);
+            color: var(--black);
+            border: none;
+            border-radius: var(--radius);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 0.5px;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .login-btn:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 215, 0, 0.2);
+        }
+
+        .login-error {
+            color: var(--danger);
+            font-size: 0.8rem;
+            margin-top: 10px;
+            text-align: center;
+            min-height: 18px;
+        }
+
+        /* ══════════════════════════════════════
+           DASHBOARD LAYOUT
+        ══════════════════════════════════════ */
+        #dashboard {
+            display: none;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 240px;
+            background: var(--black-card);
+            border-right: 1px solid var(--black-border);
+            display: flex;
+            flex-direction: column;
+            z-index: 200;
+            transition: var(--transition);
+        }
+
+        .sidebar-logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--black-border);
+        }
+
+        .sidebar-logo h1 {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            color: var(--gold);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-logo h1 i {
+            color: var(--accent);
+            font-size: 1rem;
+        }
+
+        .sidebar-logo p {
+            font-size: 0.7rem;
+            color: var(--white-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 4px;
+            padding-left: 26px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 20px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            color: var(--white-muted);
+            font-size: 0.875rem;
+            font-weight: 500;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            transition: var(--transition);
+            letter-spacing: 0.2px;
+        }
+
+        .nav-item i {
+            width: 18px;
+            text-align: center;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .nav-item:hover {
+            background: var(--white-dim);
+            color: var(--white);
+        }
+
+        .nav-item.active {
+            background: var(--gold-muted);
+            color: var(--gold);
+            border: 1px solid var(--gold-border);
+        }
+
+        .nav-item.active i {
+            color: var(--gold);
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: var(--accent);
+            color: var(--white);
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 20px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-bottom {
+            padding: 16px 12px;
+            border-top: 1px solid var(--black-border);
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: var(--radius);
+            background: var(--white-dim);
+            margin-bottom: 8px;
+        }
+
+        .admin-avatar {
+            width: 34px;
+            height: 34px;
+            background: var(--gold-muted);
+            border: 1px solid var(--gold-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .admin-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .admin-name-text {
+            font-size: 0.825rem;
+            font-weight: 600;
+            color: var(--white);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .admin-role {
+            font-size: 0.7rem;
+            color: var(--gold-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: 1px solid var(--black-border);
+            color: var(--white-muted);
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-size: 0.825rem;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .logout-btn:hover {
+            border-color: var(--danger);
+            color: var(--danger);
+            background: rgba(255, 61, 61, 0.05);
+        }
+
+        /* Main content */
+        .main {
+            margin-left: 240px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Topbar */
+        .topbar {
+            height: 64px;
+            background: var(--black-card);
+            border-bottom: 1px solid var(--black-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar-title {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .topbar-time {
+            font-size: 0.8rem;
+            color: var(--white-muted);
+            font-weight: 400;
+        }
+
+        /* Stats */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            padding: 24px 28px;
+        }
+
+        .stat-card {
+            background: var(--black-card);
+            border: 1px solid var(--black-border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold), transparent);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            border-color: var(--gold-border);
+            transform: translateY(-2px);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            margin-bottom: 14px;
+        }
+
+        .stat-icon.gold {
+            background: var(--gold-muted);
+            color: var(--gold);
+            border: 1px solid var(--gold-border);
+        }
+
+        .stat-icon.orange {
+            background: rgba(255, 107, 0, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(255, 107, 0, 0.2);
+        }
+
+        .stat-icon.blue {
+            background: rgba(0, 174, 255, 0.08);
+            color: var(--info);
+            border: 1px solid rgba(0, 174, 255, 0.15);
+        }
+
+        .stat-icon.green {
+            background: rgba(0, 200, 83, 0.08);
+            color: var(--success);
+            border: 1px solid rgba(0, 200, 83, 0.15);
+        }
+
+        .stat-icon.red {
+            background: rgba(255, 61, 61, 0.08);
+            color: var(--danger);
+            border: 1px solid rgba(255, 61, 61, 0.15);
+        }
+
+        .stat-number {
+            font-family: var(--font-display);
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: var(--white);
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--white-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 500;
+        }
+
+        /* Content area */
+        .content-area {
+            padding: 0 28px 28px;
+            flex: 1;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* Section header */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-top: 4px;
+        }
+
+        .section-header h3 {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        .section-header p {
+            font-size: 0.8rem;
+            color: var(--white-muted);
+            margin-top: 2px;
+        }
+
+        .refresh-btn {
+            padding: 8px 18px;
+            background: var(--gold-muted);
+            border: 1px solid var(--gold-border);
+            color: var(--gold);
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .refresh-btn:hover {
+            background: var(--gold);
+            color: var(--black);
+        }
+
+        /* Filter bar */
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 6px 16px;
+            border: 1px solid var(--black-border);
+            border-radius: 50px;
+            background: transparent;
+            color: var(--white-muted);
+            font-family: var(--font-body);
+            font-size: 0.78rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 0.3px;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--gold-border);
+            color: var(--gold);
+        }
+
+        .filter-btn.active {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: var(--black);
+            font-weight: 700;
+        }
+
+        /* Table */
+        .table-wrap {
+            background: var(--black-card);
+            border: 1px solid var(--black-border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead tr {
+            background: var(--black-elevated);
+            border-bottom: 1px solid var(--black-border);
+        }
+
+        th {
+            padding: 13px 16px;
+            text-align: left;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--white-muted);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 14px 16px;
+            font-size: 0.855rem;
+            border-top: 1px solid var(--black-border);
+            color: var(--white);
+            vertical-align: middle;
+        }
+
+        tbody tr {
+            transition: var(--transition);
+        }
+
+        tbody tr:hover td {
+            background: var(--white-dim);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .badge::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .badge-pending {
+            background: rgba(255, 179, 0, 0.12);
+            color: var(--warning);
+            border: 1px solid rgba(255, 179, 0, 0.2);
+        }
+
+        .badge-confirmed {
+            background: rgba(0, 174, 255, 0.1);
+            color: var(--info);
+            border: 1px solid rgba(0, 174, 255, 0.2);
+        }
+
+        .badge-preparing {
+            background: rgba(255, 107, 0, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(255, 107, 0, 0.2);
+        }
+
+        .badge-ready {
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--gold);
+            border: 1px solid var(--gold-border);
+        }
+
+        .badge-delivered {
+            background: rgba(0, 200, 83, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(0, 200, 83, 0.2);
+        }
+
+        .badge-cancelled {
+            background: rgba(255, 61, 61, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(255, 61, 61, 0.2);
+        }
+
+        /* Action select */
+        .action-select {
+            padding: 6px 10px;
+            background: var(--black-elevated);
+            border: 1px solid var(--black-border);
+            border-radius: 8px;
+            color: var(--white);
+            font-family: var(--font-body);
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .action-select:focus {
+            border-color: var(--gold-dim);
+        }
+
+        /* Menu grid */
+        .menu-admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .menu-admin-card {
+            background: var(--black-card);
+            border: 1px solid var(--black-border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .menu-admin-card:hover {
+            border-color: var(--gold-border);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-gold);
+        }
+
+        .menu-admin-card img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            display: block;
+            transition: var(--transition);
+        }
+
+        .menu-admin-card:hover img {
+            transform: scale(1.04);
+        }
+
+        .menu-admin-card-body {
+            padding: 14px;
+        }
+
+        .menu-admin-card-body .category {
+            font-size: 0.68rem;
+            color: var(--gold-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .menu-admin-card-body h4 {
+            font-size: 0.925rem;
+            color: var(--white);
+            font-weight: 600;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+
+        .menu-admin-card-body .price {
+            font-family: var(--font-display);
+            color: var(--gold);
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-toggle {
+            flex: 1;
+            padding: 7px 6px;
+            border: none;
+            border-radius: 8px;
+            font-family: var(--font-body);
+            font-size: 0.72rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-available {
+            background: rgba(0, 200, 83, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(0, 200, 83, 0.2);
+        }
+
+        .btn-unavailable {
+            background: rgba(255, 61, 61, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(255, 61, 61, 0.2);
+        }
+
+        .btn-available:hover {
+            background: var(--success);
+            color: #fff;
+        }
+
+        .btn-unavailable:hover {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        .btn-delete {
+            padding: 7px 10px;
+            background: rgba(255, 61, 61, 0.08);
+            color: var(--danger);
+            border: 1px solid rgba(255, 61, 61, 0.15);
+            border-radius: 8px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-delete:hover {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        /* Add form */
+        .add-form {
+            background: var(--black-card);
+            border: 1px solid var(--black-border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .add-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold), var(--accent), transparent);
+        }
+
+        .add-form h4 {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .add-form input,
+        .add-form select,
+        .add-form textarea {
+            width: 100%;
+            padding: 11px 14px;
+            background: var(--black-elevated);
+            border: 1px solid var(--black-border);
+            border-radius: var(--radius);
+            color: var(--white);
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            outline: none;
+            transition: var(--transition);
+            margin-bottom: 0;
+        }
+
+        .add-form input::placeholder,
+        .add-form textarea::placeholder {
+            color: rgba(255, 255, 255, 0.25);
+        }
+
+        .add-form input:focus,
+        .add-form select:focus,
+        .add-form textarea:focus {
+            border-color: var(--gold-dim);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.06);
+        }
+
+        .add-form select option {
+            background: var(--black-elevated);
+        }
+
+        .add-form textarea {
+            resize: vertical;
+            min-height: 72px;
+            margin-bottom: 12px;
+        }
+
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--white-muted);
+        }
+
+        .form-check input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--gold);
+            cursor: pointer;
+        }
+
+        .submit-add {
+            padding: 11px 28px;
+            background: var(--gold);
+            color: var(--black);
+            border: none;
+            border-radius: var(--radius);
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .submit-add:hover {
+            background: var(--gold-light);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.2);
+        }
+
+        /* Upload area */
+        .upload-area {
+            border: 2px dashed var(--black-border);
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            background: var(--black-elevated);
+        }
+
+        .upload-area:hover {
+            border-color: var(--gold-dim);
+            background: var(--gold-muted);
+        }
+
+        .upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            border: none;
+            background: transparent;
+        }
+
+        .upload-area-content {
+            pointer-events: none;
+        }
+
+        .upload-area-content i {
+            font-size: 1.5rem;
+            color: var(--gold-dim);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .upload-area-content p {
+            font-size: 0.8rem;
+            color: var(--white-muted);
+        }
+
+        .upload-area-content span {
+            font-size: 0.72rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        #uploadStatus {
+            font-size: 0.78rem;
+            margin-top: 8px;
+            display: block;
+        }
+
+        #imagePreview {
+            display: none;
+            width: 100%;
+            max-height: 120px;
+            object-fit: cover;
+            border-radius: var(--radius);
+            margin-top: 10px;
+            border: 1px solid var(--black-border);
+        }
+
+        /* Empty state */
+        .empty-msg {
+            text-align: center;
+            padding: 48px;
+            color: var(--white-muted);
+            font-size: 0.875rem;
+        }
+
+        .empty-msg i {
+            display: block;
+            font-size: 2rem;
+            color: var(--black-border);
+            margin-bottom: 12px;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            background: var(--black-elevated);
+            border: 1px solid var(--black-border);
+            border-left: 3px solid var(--gold);
+            color: var(--white);
+            padding: 14px 20px;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            z-index: 9999;
+            max-width: 320px;
+            box-shadow: var(--shadow);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 1100px) {
+            .stats-bar {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 16px;
+            }
+
+            .content-area {
+                padding: 0 16px 16px;
+            }
+
+            .topbar {
+                padding: 0 16px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 0.78rem;
+            }
+
+            th,
+            td {
+                padding: 10px 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ══════════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════════ -->
+    <div id="loginScreen">
+        <div class="login-card">
+            <div class="login-logo">
+                <div class="login-logo-icon"><i class="fas fa-utensils"></i></div>
+                <h2>Africana Swallow</h2>
+            </div>
+            <p class="login-subtitle">Admin Dashboard — Sign in to continue</p>
+
+            <div class="login-field">
+                <input type="email" id="loginEmail" placeholder="Admin Email" />
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="login-field">
+                <input type="password" id="loginPassword" placeholder="Password" />
+                <i class="fas fa-lock"></i>
+            </div>
+            <button class="login-btn" onclick="adminLogin()">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+            </button>
+            <p class="login-error" id="loginError"></p>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+     DASHBOARD
+══════════════════════════════════════ -->
+    <div id="dashboard">
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <h1><i class="fas fa-utensils"></i> Africana</h1>
+                <p>Admin Console</p>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item active" onclick="showTab('orders', this)" id="nav-orders">
+                    <i class="fas fa-receipt"></i> Orders
+                    <span class="nav-badge" id="pendingBadge">0</span>
+                </button>
+                <button class="nav-item" onclick="showTab('reservations', this)" id="nav-reservations">
+                    <i class="fas fa-calendar-alt"></i> Reservations
+                </button>
+                <button class="nav-item" onclick="showTab('menu', this)" id="nav-menu">
+                    <i class="fas fa-utensils"></i> Menu
+                </button>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <div class="admin-profile">
+                    <div class="admin-avatar"><i class="fas fa-user"></i></div>
+                    <div class="admin-info">
+                        <div class="admin-name-text" id="adminNameDisplay">Admin</div>
+                        <div class="admin-role">Super Admin</div>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="adminLogout()">
+                    <i class="fas fa-sign-out-alt"></i> Sign Out
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <div class="main">
+
+            <!-- Topbar -->
+            <div class="topbar">
+                <span class="topbar-title" id="topbarTitle">Orders</span>
+                <div class="topbar-right">
+                    <span class="topbar-time" id="topbarTime"></span>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-bar">
+                <div class="stat-card">
+                    <div class="stat-icon gold"><i class="fas fa-receipt"></i></div>
+                    <div class="stat-number" id="statTotal">—</div>
+                    <div class="stat-label">Total Orders</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange"><i class="fas fa-clock"></i></div>
+                    <div class="stat-number" id="statPending">—</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon blue"><i class="fas fa-fire"></i></div>
+                    <div class="stat-number" id="statPreparing">—</div>
+                    <div class="stat-label">Preparing</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-number" id="statDelivered">—</div>
+                    <div class="stat-label">Delivered</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon red"><i class="fas fa-naira-sign"></i></div>
+                    <div class="stat-number" id="statRevenue">—</div>
+                    <div class="stat-label">Revenue (₦)</div>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="content-area">
+
+                <!-- ── ORDERS TAB ── -->
+                <div class="tab-panel active" id="tab-orders">
+                    <div class="section-header">
+                        <div>
+                            <h3>All Orders</h3>
+                            <p>Manage and update customer orders</p>
+                        </div>
+                        <button class="refresh-btn" onclick="loadOrders()">
+                            <i class="fas fa-sync"></i> Refresh
+                        </button>
+                    </div>
+                    <div class="filter-bar">
+                        <button class="filter-btn active" onclick="filterOrders('', this)">All</button>
+                        <button class="filter-btn" onclick="filterOrders('pending', this)">Pending</button>
+                        <button class="filter-btn" onclick="filterOrders('confirmed', this)">Confirmed</button>
+                        <button class="filter-btn" onclick="filterOrders('preparing', this)">Preparing</button>
+                        <button class="filter-btn" onclick="filterOrders('ready', this)">Ready</button>
+                        <button class="filter-btn" onclick="filterOrders('delivered', this)">Delivered</button>
+                        <button class="filter-btn" onclick="filterOrders('cancelled', this)">Cancelled</button>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Order #</th>
+                                    <th>Customer</th>
+                                    <th>Phone</th>
+                                    <th>Items</th>
+                                    <th>Total</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Update</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersTableBody">
+                                <tr>
+                                    <td colspan="9" class="empty-msg"><i class="fas fa-spinner fa-spin"></i>Loading
+                                        orders...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ── RESERVATIONS TAB ── -->
+                <div class="tab-panel" id="tab-reservations">
+                    <div class="section-header">
+                        <div>
+                            <h3>Reservations</h3>
+                            <p>View and manage table bookings</p>
+                        </div>
+                        <button class="refresh-btn" onclick="loadReservations()">
+                            <i class="fas fa-sync"></i> Refresh
+                        </button>
+                    </div>
+                    <div class="filter-bar">
+                        <button class="filter-btn active" onclick="filterReservations('', this)">All</button>
+                        <button class="filter-btn" onclick="filterReservations('pending', this)">Pending</button>
+                        <button class="filter-btn" onclick="filterReservations('confirmed', this)">Confirmed</button>
+                        <button class="filter-btn" onclick="filterReservations('cancelled', this)">Cancelled</button>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Guests</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reservationsTableBody">
+                                <tr>
+                                    <td colspan="8" class="empty-msg"><i class="fas fa-spinner fa-spin"></i>Loading
+                                        reservations...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ── MENU TAB ── -->
+                <div class="tab-panel" id="tab-menu">
+                    <div class="add-form">
+                        <h4><i class="fas fa-plus-circle"></i> Add New Menu Item</h4>
+                        <div class="form-row">
+                            <input type="text" id="new-name" placeholder="Item Name *" />
+                            <select id="new-category">
+                                <option value="">Select Category *</option>
+                                <option value="rice">Rice Dishes</option>
+                                <option value="swallow">Swallow</option>
+                                <option value="soup">Soups</option>
+                                <option value="sides">Sides</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <input type="number" id="new-price" placeholder="Price (₦) *" min="0" />
+                            <div>
+                                <div class="upload-area">
+                                    <input type="file" id="new-image-input" accept="image/*"
+                                        onchange="handleImageUpload(this)" />
+                                    <div class="upload-area-content">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <p>Click to upload food image</p>
+                                        <span>JPG, PNG, WEBP — max 5MB</span>
+                                    </div>
+                                </div>
+                                <span id="uploadStatus"></span>
+                                <img id="imagePreview" src="" alt="Preview">
+                            </div>
+                        </div>
+                        <textarea id="new-description" placeholder="Description *"></textarea>
+                        <label class="form-check">
+                            <input type="checkbox" id="new-popular"> Mark as Popular ⭐
+                        </label>
+                        <button class="submit-add" onclick="addMenuItem()">
+                            <i class="fas fa-plus"></i> Add to Menu
+                        </button>
+                    </div>
+
+                    <div class="section-header">
+                        <div>
+                            <h3>Menu Items</h3>
+                            <p>Manage your restaurant menu</p>
+                        </div>
+                        <button class="refresh-btn" onclick="loadMenuAdmin()">
+                            <i class="fas fa-sync"></i> Refresh
+                        </button>
+                    </div>
+                    <div class="menu-admin-grid" id="menuAdminGrid">
+                        <p class="empty-msg">Loading menu...</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="adminToast"></div>
+
+    <script src="admin.js"></script>
+    <script>
+        // Live clock
+        function updateTime() {
+            const el = document.getElementById('topbarTime');
+            if (el) {
+                el.textContent = new Date().toLocaleTimeString('en-NG', {
+                    hour: '2-digit', minute: '2-digit', hour12: true
+                });
+            }
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+    </script>
+</body>
+
+</html>

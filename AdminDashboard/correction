@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Africana Swallow — Admin</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, sans-serif;
+            background: #f5f5f5;
+            color: #222;
+        }
+
+        /* ── Login Screen ── */
+        #loginScreen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #2c5530;
+        }
+
+        .login-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-card h2 {
+            color: #2c5530;
+            margin-bottom: 8px;
+            font-size: 22px;
+        }
+
+        .login-card p {
+            color: #888;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        .login-card input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .login-card input:focus {
+            border-color: #2c5530;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: #2c5530;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .login-btn:hover {
+            background: #1e3d22;
+        }
+
+        .login-error {
+            color: #e53935;
+            font-size: 13px;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        /* ── Dashboard Layout ── */
+        #dashboard {
+            display: none;
+        }
+
+        .topbar {
+            background: #2c5530;
+            color: #fff;
+            padding: 0 24px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar-brand {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .topbar-brand span {
+            color: #ffd700;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .admin-name {
+            font-size: 14px;
+            opacity: 0.85;
+        }
+
+        .logout-btn {
+            padding: 6px 14px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        /* ── Stats bar ── */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            padding: 24px;
+        }
+
+        .stat-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            text-align: center;
+        }
+
+        .stat-card .stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            color: #2c5530;
+        }
+
+        .stat-card .stat-label {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card.revenue .stat-number {
+            color: #e65100;
+        }
+
+        /* ── Tabs ── */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            padding: 0 24px;
+            border-bottom: 2px solid #e0e0e0;
+            background: #fff;
+        }
+
+        .tab-btn {
+            padding: 14px 24px;
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #888;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            color: #2c5530;
+            border-bottom-color: #2c5530;
+        }
+
+        .tab-btn:hover {
+            color: #2c5530;
+        }
+
+        /* ── Content area ── */
+        .content {
+            padding: 24px;
+            display: none;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        /* ── Section header ── */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .refresh-btn {
+            padding: 8px 16px;
+            background: #2c5530;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        /* ── Filter bar ── */
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 6px 14px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            background: #fff;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .filter-btn.active {
+            background: #2c5530;
+            color: #fff;
+            border-color: #2c5530;
+        }
+
+        /* ── Table ── */
+        .table-wrap {
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f9f9f9;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #888;
+        }
+
+        td {
+            padding: 14px 16px;
+            font-size: 14px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        tr:hover td {
+            background: #fafafa;
+        }
+
+        /* ── Badges ── */
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-pending {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .badge-confirmed {
+            background: #e8f5e9;
+            color: #2c5530;
+        }
+
+        .badge-preparing {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .badge-ready {
+            background: #f3e5f5;
+            color: #6a1b9a;
+        }
+
+        .badge-delivered {
+            background: #e8f5e9;
+            color: #1b5e20;
+        }
+
+        .badge-cancelled {
+            background: #ffebee;
+            color: #b71c1c;
+        }
+
+        /* ── Action buttons ── */
+        .action-select {
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            background: #fff;
+        }
+
+        /* ── Menu grid ── */
+        .menu-admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .menu-admin-card {
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .menu-admin-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .menu-admin-card-body {
+            padding: 12px;
+        }
+
+        .menu-admin-card-body h4 {
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .menu-admin-card-body .price {
+            color: #e65100;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .menu-admin-card-body .category {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-toggle {
+            flex: 1;
+            padding: 6px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-available {
+            background: #e8f5e9;
+            color: #2c5530;
+        }
+
+        .btn-unavailable {
+            background: #ffebee;
+            color: #b71c1c;
+        }
+
+        .btn-delete {
+            padding: 6px 10px;
+            background: #ffebee;
+            color: #b71c1c;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* ── Add menu form ── */
+        .add-form {
+            background: #fff;
+            border-radius: 10px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            margin-bottom: 24px;
+        }
+
+        .add-form h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #2c5530;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .add-form input,
+        .add-form select,
+        .add-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 12px;
+            outline: none;
+        }
+
+        .add-form input:focus,
+        .add-form select:focus {
+            border-color: #2c5530;
+        }
+
+        .submit-add {
+            padding: 10px 24px;
+            background: #2c5530;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* ── Toast ── */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #2c5530;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .empty-msg {
+            text-align: center;
+            padding: 40px;
+            color: #aaa;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ── LOGIN SCREEN ───────────────────────────────────────────────── -->
+    <div id="loginScreen">
+        <div class="login-card">
+            <h2><i class="fas fa-utensils"></i> Africana Swallow</h2>
+            <p>Admin Dashboard — Sign in to continue</p>
+            <input type="email" id="loginEmail" placeholder="Admin Email" />
+            <input type="password" id="loginPassword" placeholder="Password" />
+            <button class="login-btn" onclick="adminLogin()">Sign In</button>
+            <p class="login-error" id="loginError"></p>
+        </div>
+    </div>
+
+    <!-- ── DASHBOARD ─────────────────────────────────────────────────── -->
+    <div id="dashboard">
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="topbar-brand"><i class="fas fa-utensils"></i> Africana <span>Admin</span></div>
+            <div class="topbar-right">
+                <span class="admin-name" id="adminNameDisplay"></span>
+                <button class="logout-btn" onclick="adminLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-bar" id="statsBar">
+            <div class="stat-card">
+                <div class="stat-number" id="statTotal">-</div>
+                <div class="stat-label">Total Orders</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statPending">-</div>
+                <div class="stat-label">Pending</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statPreparing">-</div>
+                <div class="stat-label">Preparing</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statDelivered">-</div>
+                <div class="stat-label">Delivered</div>
+            </div>
+            <div class="stat-card revenue">
+                <div class="stat-number" id="statRevenue">-</div>
+                <div class="stat-label">Revenue (₦)</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('orders', this)">
+                <i class="fas fa-receipt"></i> Orders
+            </button>
+            <button class="tab-btn" onclick="showTab('reservations', this)">
+                <i class="fas fa-calendar"></i> Reservations
+            </button>
+            <button class="tab-btn" onclick="showTab('menu', this)">
+                <i class="fas fa-utensils"></i> Menu
+            </button>
+        </div>
+
+        <!-- ── ORDERS TAB ── -->
+        <div class="content active" id="tab-orders">
+            <div class="section-header">
+                <h3>All Orders</h3>
+                <button class="refresh-btn" onclick="loadOrders()"><i class="fas fa-sync"></i> Refresh</button>
+            </div>
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="filterOrders('', this)">All</button>
+                <button class="filter-btn" onclick="filterOrders('pending', this)">Pending</button>
+                <button class="filter-btn" onclick="filterOrders('confirmed', this)">Confirmed</button>
+                <button class="filter-btn" onclick="filterOrders('preparing', this)">Preparing</button>
+                <button class="filter-btn" onclick="filterOrders('ready', this)">Ready</button>
+                <button class="filter-btn" onclick="filterOrders('delivered', this)">Delivered</button>
+                <button class="filter-btn" onclick="filterOrders('cancelled', this)">Cancelled</button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order #</th>
+                            <th>Customer</th>
+                            <th>Phone</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Update</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <tr>
+                            <td colspan="9" class="empty-msg">Loading orders...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ── RESERVATIONS TAB ── -->
+        <div class="content" id="tab-reservations">
+            <div class="section-header">
+                <h3>Reservations</h3>
+                <button class="refresh-btn" onclick="loadReservations()"><i class="fas fa-sync"></i> Refresh</button>
+            </div>
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="filterReservations('', this)">All</button>
+                <button class="filter-btn" onclick="filterReservations('pending', this)">Pending</button>
+                <button class="filter-btn" onclick="filterReservations('confirmed', this)">Confirmed</button>
+                <button class="filter-btn" onclick="filterReservations('cancelled', this)">Cancelled</button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Guests</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reservationsTableBody">
+                        <tr>
+                            <td colspan="8" class="empty-msg">Loading reservations...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ── MENU TAB ── -->
+        <div class="content" id="tab-menu">
+            <!-- Add new item form -->
+            <div class="add-form">
+                <h4><i class="fas fa-plus-circle"></i> Add New Menu Item</h4>
+                <div class="form-row">
+                    <input type="text" id="new-name" placeholder="Item Name *" />
+                    <select id="new-category">
+                        <option value="">Select Category *</option>
+                        <option value="rice">Rice Dishes</option>
+                        <option value="swallow">Swallow</option>
+                        <option value="soup">Soups</option>
+                        <option value="sides">Sides</option>
+                    </select>
+                </div>
+             <!-- Replace your existing add-form div in index.html with this -->
+
+<div class="add-form">
+    <h4><i class="fas fa-plus-circle"></i> Add New Menu Item</h4>
+    <div class="form-row">
+        <input type="text" id="new-name" placeholder="Item Name *" />
+        <select id="new-category">
+            <option value="">Select Category *</option>
+            <option value="rice">Rice Dishes</option>
+            <option value="swallow">Swallow</option>
+            <option value="soup">Soups</option>
+            <option value="sides">Sides</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <input type="number" id="new-price" placeholder="Price (₦) *" min="0" />
+        <!-- ✅ File upload instead of URL input -->
+        <div style="display:flex;flex-direction:column;gap:6px;">
+            <label style="font-size:12px;color:#888;font-weight:700;text-transform:uppercase;">
+                Food Image *
+            </label>
+            <input
+                type="file"
+                id="new-image-input"
+                accept="image/*"
+                onchange="handleImageUpload(this)"
+                style="padding:8px;border:1px solid #ddd;border-radius:6px;font-size:13px;cursor:pointer;"
+            />
+            <span id="uploadStatus" style="font-size:12px;"></span>
+            <img id="imagePreview" src="" alt="Preview"
+                style="display:none;width:100%;max-height:120px;object-fit:cover;border-radius:6px;margin-top:4px;">
+        </div>
+    </div>
+    <textarea id="new-description" placeholder="Description *" rows="2"></textarea>
+    <label style="font-size:13px;display:flex;align-items:center;gap:6px;margin-bottom:12px;">
+        <input type="checkbox" id="new-popular"> Mark as Popular
+    </label>
+    <button class="submit-add" onclick="addMenuItem()">
+        <i class="fas fa-plus"></i> Add Item
+    </button>
+</div>
+
+            <div class="section-header">
+                <h3>All Menu Items</h3>
+                <button class="refresh-btn" onclick="loadMenuAdmin()"><i class="fas fa-sync"></i> Refresh</button>
+            </div>
+            <div class="menu-admin-grid" id="menuAdminGrid">
+                <p class="empty-msg">Loading menu...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="adminToast"></div>
+
+    <script src="admin.js"></script>
+</body>
+
+</html>
