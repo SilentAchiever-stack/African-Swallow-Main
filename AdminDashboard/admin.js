@@ -1,5 +1,5 @@
 // Africana Swallow — Admin Dashboard JS
-const API = 'http://localhost:3000/api';
+const API = 'https://africana-swallow-main.onrender.com/api';
 let token = localStorage.getItem('asw-admin-token') || null;
 let currentOrderFilter = '';
 let currentResFilter = '';

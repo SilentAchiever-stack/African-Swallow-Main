@@ -1,7 +1,7 @@
 // Africana Swallow Restaurant JavaScript
 // Connected to real backend API
 
-const API_BASE = 'http://localhost:3000/api';
+const API_BASE = 'https://africana-swallow-main.onrender.com/api';
 
 class AfricanaSwallow {
     constructor() {
