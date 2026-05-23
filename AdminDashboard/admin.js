@@ -432,6 +432,51 @@ async function deleteMenuItem(id, name) {
     }
 }
 
+// ── Change Password ───────────────────────────────────────────────────────────
+async function changePassword() {
+    const current = document.getElementById('currentPassword').value.trim();
+    const newPass = document.getElementById('newPassword').value.trim();
+    const confirm = document.getElementById('confirmPassword').value.trim();
+
+    if (!current || !newPass || !confirm) {
+        showToast('❌ Please fill in all password fields.');
+        return;
+    }
+
+    if (newPass !== confirm) {
+        showToast('❌ New passwords do not match.');
+        return;
+    }
+
+    if (newPass.length < 6) {
+        showToast('❌ New password must be at least 6 characters.');
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API}/auth/change-password`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ currentPassword: current, newPassword: newPass })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+            showToast('✅ Password changed successfully!');
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+        } else {
+            showToast(`❌ ${data.message}`);
+        }
+    } catch (err) {
+        showToast('❌ Error changing password.');
+    }
+}
+
 // ── Toast ─────────────────────────────────────────────────────────────────────
 function showToast(msg) {
     const t = document.getElementById('adminToast');
