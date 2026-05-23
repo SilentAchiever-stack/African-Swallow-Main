@@ -7,8 +7,10 @@ const {
     getOrderById,
     updateOrderStatus,
     getOrderStats
-} = require('../Controller/Ordercontroller');
-const { protect } = require('../Middleware/authMiddleware');
+} =require('../controller/Ordercontroller')  // change Controller → controller;
+const { protect } = require('../MiddleWare/authMiddleware')   // change Middleware → MiddleWare;
+
+
 
 // PUBLIC
 router.post('/', placeOrder);                                    // POST /api/orders

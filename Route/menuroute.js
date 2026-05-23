@@ -7,8 +7,10 @@ const {
     updateMenuItem,
     deleteMenuItem,
     seedMenu
-} = require('../Controller/Menucontroller');
-const { protect, superAdminOnly } = require('../Middleware/authMiddleware');
+} = require('../controller/Menucontroller')  // change Controller → controller
+const { protect, superAdminOnly } = require('../MiddleWare/authMiddleware')  // change Middleware → MiddleWare
+
+
 
 // PUBLIC
 router.get('/', getAllMenuItems);                          // GET /api/menu

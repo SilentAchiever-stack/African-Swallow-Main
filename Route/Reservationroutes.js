@@ -6,7 +6,7 @@ const {
     updateReservationStatus,
     deleteReservation
 } = require('../controller/Reservationcontroller');
-const { protect } = require('../Middleware/authMiddleware');
+const { protect } = require('../MiddleWare/authMiddleware')  // change Middleware → MiddleWare
 
 // PUBLIC
 router.post('/', createReservation);                               // POST /api/reservations
