@@ -1477,6 +1477,9 @@ body::-webkit-scrollbar-thumb {
 }
 
 @media (max-width: 480px) {
+    .hero{
+        min-height: 60vh;
+    }
     .collage-top {
         height: 180px;
     }
