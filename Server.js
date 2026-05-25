@@ -18,7 +18,7 @@ connectDB();
 
 // ── Middleware
 app.use(cors({
-    origin: '*',
+    origin:'https://african-frontend.vercel.app',
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
